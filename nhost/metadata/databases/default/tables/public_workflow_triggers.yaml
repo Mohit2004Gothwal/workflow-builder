@@ -1,0 +1,126 @@
+table:
+  name: workflow_triggers
+  schema: public
+object_relationships:
+  - name: workflow
+    using:
+      foreign_key_constraint_on: workflow_id
+insert_permissions:
+  - role: editor
+    permission:
+      check:
+        _and:
+          - workflow:
+              organization:
+                org_members:
+                  user_id:
+                    _eq: X-Hasura-User-Id
+          - type:
+              _neq: webhook
+      columns:
+        - config
+        - type
+        - id
+        - workflow_id
+    comment: ""
+  - role: owner
+    permission:
+      check:
+        workflow:
+          organization:
+            org_members:
+              user_id:
+                _eq: X-Hasura-User-Id
+      columns:
+        - config
+        - type
+        - id
+        - workflow_id
+    comment: ""
+select_permissions:
+  - role: editor
+    permission:
+      columns:
+        - config
+        - type
+        - id
+        - workflow_id
+      filter:
+        workflow:
+          organization:
+            org_members:
+              user_id:
+                _eq: X-Hasura-User-Id
+    comment: ""
+  - role: owner
+    permission:
+      columns:
+        - config
+        - type
+        - id
+        - workflow_id
+      filter:
+        workflow:
+          organization:
+            org_members:
+              user_id:
+                _eq: X-Hasura-User-Id
+    comment: ""
+  - role: viewer
+    permission:
+      columns:
+        - config
+        - type
+        - id
+        - workflow_id
+      filter:
+        workflow:
+          organization:
+            org_members:
+              user_id:
+                _eq: X-Hasura-User-Id
+    comment: ""
+update_permissions:
+  - role: editor
+    permission:
+      columns:
+        - config
+        - type
+        - id
+        - workflow_id
+      filter:
+        _and:
+          - workflow:
+              organization:
+                org_members:
+                  user_id:
+                    _eq: X-Hasura-User-Id
+          - type:
+              _neq: webhook
+      check: null
+    comment: ""
+  - role: owner
+    permission:
+      columns:
+        - config
+        - type
+        - id
+        - workflow_id
+      filter:
+        workflow:
+          organization:
+            org_members:
+              user_id:
+                _eq: X-Hasura-User-Id
+      check: null
+    comment: ""
+delete_permissions:
+  - role: owner
+    permission:
+      filter:
+        workflow:
+          organization:
+            org_members:
+              user_id:
+                _eq: X-Hasura-User-Id
+    comment: ""
