@@ -1,6 +1,13 @@
-actions: []
+actions:
+  - name: triggerWorkflowRun
+    definition:
+      kind: synchronous
+      handler: https://local.functions.local.nhost.run/v1/trigger-workflow-run
+    permissions:
+      - role: user
 custom_types:
   enums: []
   input_objects: []
-  objects: []
+  objects:
+    - name: TriggerRunOutput
   scalars: []

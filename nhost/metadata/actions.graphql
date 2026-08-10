@@ -1,0 +1,11 @@
+type Mutation {
+  triggerWorkflowRun(
+    workflow_id: uuid!
+  ): TriggerRunOutput
+}
+
+type TriggerRunOutput {
+  run_id: uuid
+  status: String
+}
+
