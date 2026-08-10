@@ -16,6 +16,31 @@ array_relationships:
         table:
           name: step_runs
           schema: public
+insert_permissions:
+  - role: user
+    permission:
+      check:
+        _and:
+          - organization:
+              org_members:
+                user_id:
+                  _eq: X-Hasura-User-Id
+          - organization:
+              org_members:
+                role:
+                  _in:
+                    - owner
+                    - editor
+      columns:
+        - status
+        - trigger_type
+        - finished_at
+        - started_at
+        - id
+        - org_id
+        - started_by
+        - workflow_id
+    comment: ""
 select_permissions:
   - role: editor
     permission:
@@ -51,6 +76,23 @@ select_permissions:
             user_id:
               _eq: X-Hasura-User-Id
     comment: ""
+  - role: user
+    permission:
+      columns:
+        - status
+        - trigger_type
+        - finished_at
+        - started_at
+        - id
+        - org_id
+        - started_by
+        - workflow_id
+      filter:
+        organization:
+          org_members:
+            user_id:
+              _eq: X-Hasura-User-Id
+    comment: ""
   - role: viewer
     permission:
       columns:
@@ -67,4 +109,45 @@ select_permissions:
           org_members:
             user_id:
               _eq: X-Hasura-User-Id
+    comment: ""
+update_permissions:
+  - role: user
+    permission:
+      columns:
+        - status
+        - trigger_type
+        - finished_at
+        - started_at
+        - id
+        - org_id
+        - started_by
+        - workflow_id
+      filter:
+        _and:
+          - organization:
+              org_members:
+                user_id:
+                  _eq: X-Hasura-User-Id
+          - organization:
+              org_members:
+                role:
+                  _in:
+                    - owner
+                    - editor
+      check: null
+    comment: ""
+delete_permissions:
+  - role: user
+    permission:
+      filter:
+        _and:
+          - organization:
+              org_members:
+                user_id:
+                  _eq: X-Hasura-User-Id
+          - organization:
+              org_members:
+                role:
+                  _in:
+                    - owner
     comment: ""

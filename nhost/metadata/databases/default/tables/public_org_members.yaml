@@ -20,6 +20,27 @@ insert_permissions:
         - org_id
         - user_id
     comment: ""
+  - role: user
+    permission:
+      check:
+        _and:
+          - organization:
+              org_members:
+                user_id:
+                  _eq: X-Hasura-User-Id
+          - organization:
+              org_members:
+                role:
+                  _in:
+                    - owner
+                    - editor
+      columns:
+        - role
+        - created_at
+        - id
+        - org_id
+        - user_id
+    comment: ""
 select_permissions:
   - role: editor
     permission:
@@ -36,6 +57,20 @@ select_permissions:
               _eq: X-Hasura-User-Id
     comment: ""
   - role: owner
+    permission:
+      columns:
+        - role
+        - created_at
+        - id
+        - org_id
+        - user_id
+      filter:
+        organization:
+          org_members:
+            user_id:
+              _eq: X-Hasura-User-Id
+    comment: ""
+  - role: user
     permission:
       columns:
         - role
@@ -79,6 +114,28 @@ update_permissions:
               _eq: X-Hasura-User-Id
       check: null
     comment: ""
+  - role: user
+    permission:
+      columns:
+        - role
+        - created_at
+        - id
+        - org_id
+        - user_id
+      filter:
+        _and:
+          - organization:
+              org_members:
+                user_id:
+                  _eq: X-Hasura-User-Id
+          - organization:
+              org_members:
+                role:
+                  _in:
+                    - owner
+                    - editor
+      check: null
+    comment: ""
 delete_permissions:
   - role: owner
     permission:
@@ -87,4 +144,18 @@ delete_permissions:
           org_members:
             user_id:
               _eq: X-Hasura-User-Id
+    comment: ""
+  - role: user
+    permission:
+      filter:
+        _and:
+          - organization:
+              org_members:
+                user_id:
+                  _eq: X-Hasura-User-Id
+          - organization:
+              org_members:
+                role:
+                  _in:
+                    - owner
     comment: ""

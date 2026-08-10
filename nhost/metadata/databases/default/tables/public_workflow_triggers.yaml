@@ -37,6 +37,28 @@ insert_permissions:
         - id
         - workflow_id
     comment: ""
+  - role: user
+    permission:
+      check:
+        _and:
+          - workflow:
+              organization:
+                org_members:
+                  user_id:
+                    _eq: X-Hasura-User-Id
+          - workflow:
+              organization:
+                org_members:
+                  role:
+                    _in:
+                      - owner
+                      - editor
+      columns:
+        - config
+        - type
+        - id
+        - workflow_id
+    comment: ""
 select_permissions:
   - role: editor
     permission:
@@ -53,6 +75,20 @@ select_permissions:
                 _eq: X-Hasura-User-Id
     comment: ""
   - role: owner
+    permission:
+      columns:
+        - config
+        - type
+        - id
+        - workflow_id
+      filter:
+        workflow:
+          organization:
+            org_members:
+              user_id:
+                _eq: X-Hasura-User-Id
+    comment: ""
+  - role: user
     permission:
       columns:
         - config
@@ -114,6 +150,29 @@ update_permissions:
                 _eq: X-Hasura-User-Id
       check: null
     comment: ""
+  - role: user
+    permission:
+      columns:
+        - config
+        - type
+        - id
+        - workflow_id
+      filter:
+        _and:
+          - workflow:
+              organization:
+                org_members:
+                  user_id:
+                    _eq: X-Hasura-User-Id
+          - workflow:
+              organization:
+                org_members:
+                  role:
+                    _in:
+                      - owner
+                      - editor
+      check: null
+    comment: ""
 delete_permissions:
   - role: owner
     permission:
@@ -123,4 +182,20 @@ delete_permissions:
             org_members:
               user_id:
                 _eq: X-Hasura-User-Id
+    comment: ""
+  - role: user
+    permission:
+      filter:
+        _and:
+          - workflow:
+              organization:
+                org_members:
+                  user_id:
+                    _eq: X-Hasura-User-Id
+          - workflow:
+              organization:
+                org_members:
+                  role:
+                    _in:
+                      - owner
     comment: ""
