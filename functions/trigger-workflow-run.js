@@ -123,19 +123,42 @@ module.exports = async (req, res) => {
 
       try {
         let output;
-        if (step.type === 'llm_call') {
-          output = { note: 'stubbed llm call', input: lastOutput };
-          // TODO: replace with real LLM API call
-        } else if (step.type === 'http_request') {
-          output = { note: 'stubbed http call' };
-          // TODO: replace with real fetch() to step.config.url
-        } else if (step.type === 'conditional_branch') {
-          output = { branch: 'default', prevOutput: lastOutput };
-        } else if (step.type === 'db_write') {
-          output = { written: true };
-        } else if (step.type === 'notify') {
-          output = { notified: true };
+        const maxAttempts = (step.type === 'llm_call' || step.type === 'http_request') ? 2 : 1;
+        let lastErr = null;
+
+        for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+          try {
+            if (attempt > 1) {
+              await gql(`
+                mutation($id: uuid!, $attempt: Int!) {
+                  update_step_runs_by_pk(pk_columns: { id: $id }, _set: { attempt: $attempt }) { id }
+                }
+              `, { id: stepRunId, attempt });
+              await new Promise(r => setTimeout(r, 300 * attempt)); // small backoff
+            }
+
+            if (step.type === 'llm_call') {
+              output = { note: 'stubbed llm call', input: lastOutput };
+              // TODO: replace with real LLM API call
+            } else if (step.type === 'http_request') {
+              output = { note: 'stubbed http call' };
+              // TODO: replace with real fetch() to step.config.url
+            } else if (step.type === 'conditional_branch') {
+              output = { branch: 'default', prevOutput: lastOutput };
+            } else if (step.type === 'db_write') {
+              output = { written: true };
+            } else if (step.type === 'notify') {
+              output = { notified: true };
+            }
+
+            lastErr = null;
+            break; // success, exit retry loop
+          } catch (attemptErr) {
+            lastErr = attemptErr;
+          }
         }
+
+        if (lastErr) throw lastErr;
 
         lastOutput = output;
 
