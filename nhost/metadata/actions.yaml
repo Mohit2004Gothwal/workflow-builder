@@ -1,4 +1,10 @@
 actions:
+  - name: approveStep
+    definition:
+      kind: synchronous
+      handler: https://local.functions.local.nhost.run/v1/approve-step
+    permissions:
+      - role: user
   - name: triggerWorkflowRun
     definition:
       kind: synchronous

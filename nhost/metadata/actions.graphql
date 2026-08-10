@@ -1,4 +1,10 @@
 type Mutation {
+  approveStep(
+    step_run_id: uuid!
+  ): TriggerRunOutput
+}
+
+type Mutation {
   triggerWorkflowRun(
     workflow_id: uuid!
   ): TriggerRunOutput
