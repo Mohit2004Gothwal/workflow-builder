@@ -1,6 +1,6 @@
 const fetch = require('node-fetch');
 
-const GRAPHQL_URL = process.env.NHOST_GRAPHQL_URL || 'http://graphql:8080/v1/graphql'; // internal docker network URL, we'll confirm the exact value next
+const GRAPHQL_URL = process.env.HASURA_GRAPHQL_GRAPHQL_URL || 'https://gmfrhjdjkgaaqlpuyzdi.hasura.ap-south-1.nhost.run/v1/graphql';
 const ADMIN_SECRET = process.env.NHOST_ADMIN_SECRET || process.env.HASURA_GRAPHQL_ADMIN_SECRET;
 
 async function gql(query, variables) {
