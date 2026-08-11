@@ -76,6 +76,10 @@ Locally, nhost injects `HASURA_GRAPHQL_GRAPHQL_URL` and `HASURA_GRAPHQL_ADMIN_SE
 ## Deployment
 
 - **Backend:** nhost Cloud project, connected to this GitHub repo — auto-deploys migrations, metadata, and functions on every push to `main` (see `nhost deployments list` / `nhost deployments logs <id>`).
+
+## OutCome
+<img width="1507" height="680" alt="image" src="https://github.com/user-attachments/assets/92894990-19d1-4829-afc8-56ccd70375ad" />
+
 - **Frontend:** Vercel, root directory set to `frontend/`, deployed via `npx vercel --prod` from within that folder. Requires `NEXT_PUBLIC_NHOST_SUBDOMAIN` / `NEXT_PUBLIC_NHOST_REGION` set as production environment variables pointing at the cloud project, and Vercel's Deployment Protection disabled (or public reviewers can't open the link).
 
 ## Write-up
