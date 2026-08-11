@@ -6,7 +6,7 @@ import { gql, useQuery, useMutation, useSubscription } from '@apollo/client';
 import { useSignInEmailPassword, useSignUpEmailPassword, useAuthenticated, useSignOut, useUserId } from '@nhost/react';
 
 // Hardcoded for now — later this comes from an org switcher
-const ORG_ID = '11e693c2-e93b-4fe3-86bd-d19943d99791';
+const ORG_ID = 'b7ea23f3-55c9-4712-aad3-79ccd1053ee2';
 
 const GET_WORKFLOWS = gql`
   query GetWorkflows($org_id: uuid!) {
