@@ -3,6 +3,9 @@ const fetch = require('node-fetch');
 const GRAPHQL_URL = process.env.HASURA_GRAPHQL_GRAPHQL_URL || 'https://gmfrhjdjkgaaqlpuyzdi.hasura.ap-south-1.nhost.run/v1/graphql';
 const ADMIN_SECRET = process.env.HASURA_GRAPHQL_ADMIN_SECRET;
 
+console.log('DEBUG ADMIN_SECRET present:', !!ADMIN_SECRET, 'length:', ADMIN_SECRET ? ADMIN_SECRET.length : 0);
+console.log('DEBUG all env keys:', Object.keys(process.env).join(', '));
+
 async function gql(query, variables) {
   const res = await fetch(GRAPHQL_URL, {
     method: 'POST',
