@@ -118,7 +118,10 @@ enabled = false
 enabled = false
 
 [auth.method.oauth.google]
-enabled = false
+enabled = true
+audience = ''
+clientId = '467189902007-9kt9kc0h96ql2u4hbbmu5qq4a7m08ctv.apps.googleusercontent.com'
+clientSecret = '{{ secrets.GOOGLE_CLIENT_SECRET }}'
 
 [auth.method.oauth.linkedin]
 enabled = false
