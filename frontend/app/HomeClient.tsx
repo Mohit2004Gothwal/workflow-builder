@@ -3,14 +3,12 @@
 import { useState, useEffect } from 'react';
 import { gql, useQuery, useMutation, useSubscription } from '@apollo/client';
 import {
-  useSignInEmailPassword,
-  useSignUpEmailPassword,
   useAuthenticationStatus,
   useSignOut,
   useUserId,
-  useResetPassword,
   useChangePassword,
 } from '@nhost/react';
+import Landing from '@/components/Landing'; // if this path fails: '../components/Landing'
 
 const GET_WORKFLOWS = gql`
   query GetWorkflows($org_id: uuid!) {
@@ -79,103 +77,6 @@ const STEP_RUNS_SUB = gql`
     }
   }
 `;
-
-// ---------- Auth form (sign in / sign up / forgot password) ----------
-
-function AuthForm() {
-  const { signInEmailPassword } = useSignInEmailPassword();
-  const { signUpEmailPassword } = useSignUpEmailPassword();
-  const { resetPassword } = useResetPassword();
-
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [mode, setMode] = useState<'signin' | 'signup'>('signin');
-  const [error, setError] = useState('');
-  const [resetSent, setResetSent] = useState(false);
-
-  const clearMessages = () => {
-    setError('');
-    setResetSent(false);
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    clearMessages();
-    const result =
-      mode === 'signin'
-        ? await signInEmailPassword(email, password)
-        : await signUpEmailPassword(email, password);
-    if (result.error) setError(result.error.message);
-  };
-
-  const handleForgotPassword = async () => {
-    clearMessages();
-    if (!email) {
-      setError('Enter your email above first, then click "Forgot password"');
-      return;
-    }
-    // No separate route needed — nhost redirects back to this same page
-    // (auth.redirections.clientUrl) with ?type=passwordReset in the URL,
-    // which the top-level HomeClient component below detects.
-    const result = await resetPassword(email);
-    if (result.error) {
-      setError(result.error.message);
-    } else {
-      setResetSent(true);
-    }
-  };
-
-  return (
-    <div style={{ padding: 40, maxWidth: 400 }}>
-      <h1>Workflow Builder</h1>
-      <form onSubmit={handleSubmit}>
-        <div style={{ marginBottom: 10 }}>
-          <input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => {
-              setEmail(e.target.value);
-              clearMessages();
-            }}
-            style={{ width: '100%', padding: 8 }}
-          />
-        </div>
-        <div style={{ marginBottom: 10 }}>
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => {
-              setPassword(e.target.value);
-              clearMessages();
-            }}
-            style={{ width: '100%', padding: 8 }}
-          />
-        </div>
-        {error && <p style={{ color: 'red' }}>{error}</p>}
-        {resetSent && <p style={{ color: 'green' }}>Check your email for a reset link.</p>}
-        <button type="submit">{mode === 'signin' ? 'Sign In' : 'Sign Up'}</button>
-      </form>
-
-      <button
-        onClick={() => {
-          setMode(mode === 'signin' ? 'signup' : 'signin');
-          clearMessages();
-        }}
-        style={{ marginTop: 10, display: 'block' }}
-      >
-        {mode === 'signin' ? 'Need an account? Sign up' : 'Have an account? Sign in'}
-      </button>
-
-      {mode === 'signin' && (
-        <button onClick={handleForgotPassword} style={{ marginTop: 10, display: 'block' }}>
-          Forgot password?
-        </button>
-      )}
-    </div>
-  );
-}
 
 // ---------- Reset-password landing screen ----------
 // Nhost redirects here (to auth.redirections.clientUrl) after the person
@@ -406,7 +307,7 @@ function Dashboard() {
   );
 }
 
-// ---------- Top-level: routes between auth form, reset flow, and dashboard ----------
+// ---------- Top-level: routes between landing/sign-in, reset flow, and dashboard ----------
 
 export default function HomeClient() {
   const { isAuthenticated, isLoading } = useAuthenticationStatus();
@@ -441,5 +342,5 @@ export default function HomeClient() {
     );
   }
 
-  return isAuthenticated ? <Dashboard /> : <AuthForm />;
+  return isAuthenticated ? <Dashboard /> : <Landing />;
 }
