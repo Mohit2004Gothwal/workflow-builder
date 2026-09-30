@@ -1,12 +1,17 @@
 'use client';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useAuthenticationStatus, useSignOut } from '@nhost/react';
 
 export default function NavActions() {
   const { isAuthenticated, isLoading } = useAuthenticationStatus();
   const { signOut } = useSignOut();
+  const [mounted, setMounted] = useState(false);
 
-  if (isLoading) return null;
+  useEffect(() => setMounted(true), []);
+
+  // Server and the first browser render both return null, so they match.
+  if (!mounted || isLoading) return null;
 
   return isAuthenticated ? (
     <>
