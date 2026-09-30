@@ -11,7 +11,7 @@ import {
 type Mode = 'code' | 'signin' | 'signup';
 
 export default function AuthCard() {
-  const { google } = useProviderLink(); // no redirectTo: Nhost sends users back to your Client URL
+  const { google } = useProviderLink({ redirectTo: window.location.origin });
   const otp = useSignInEmailOTP();
   const { signInEmailPassword, isLoading: signingIn } = useSignInEmailPassword();
   const { signUpEmailPassword, isLoading: signingUp } = useSignUpEmailPassword();
