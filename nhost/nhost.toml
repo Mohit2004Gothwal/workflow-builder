@@ -39,7 +39,8 @@ version = '0.49.1'
 mode = 'disabled'
 
 [auth.redirections]
-clientUrl = 'http://localhost:3000'
+clientUrl = 'https://workflow-builder-pink-mu.vercel.app'
+allowedUrls = ['https://workflow-builder-pink-mu.vercel.app', 'http://localhost:3000']
 
 [auth.signUp]
 enabled = true
